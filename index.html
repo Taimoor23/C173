@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Menu Card</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+  <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+  <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script src="./js files/addButton.js"></script>
+  <script src="./js files/markerHandler.js"></script>
+  <script src="./js files/stars.js"></script>
+  <script
+  const firebaseConfig = {
+    apiKey: "AIzaSyCJevmRThyF5LPgXmTnn4JxSkg0nZdR24E",
+    authDomain: "menu-card-237c2.firebaseapp.com",
+    projectId: "menu-card-237c2",
+    storageBucket: "menu-card-237c2.appspot.com",
+    messagingSenderId: "777944859307",
+    appId: "1:777944859307:web:731a34f0281122d2c2adee",
+    measurementId: "G-BEYMWCB7J9"
+  };
+  
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.getAnalytics(app);
+  ></script>
+  <script src="./js files/addMarker.js"></script>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+
+  <!-- Local StyleSheet -->
+ <link href="./style.css" rel="StyleSheet"/>
+  
+  <!--Marker Handler Src-->
+  
+
+</head>
+
+<body style="margin : 0px; overflow: hidden;">
+
+  <a-scene 
+    embedded vr-mode-ui="enabled: false"     
+    arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960;debugUIEnabled: false;"
+    gesture-detector
+    create-buttons
+    >
+  <a-assets>
+    <a-asset-item id="pizza-model" src="./assets/pizza/scene.gltf"></a-asset-item>
+  </a-assets>
+  <!--pattern marker-->
+  <a-marker id="pizza-marker" type="pattern" url="./assets/dish-markers/pattern-pizza.patt"
+  cursor="rayOrigin:mouse" marker-handler
+  >
+  <a-entity id="pizza-3d-model" position="-1 0 0" scale="0.05 0.05 0.05" gltf-model="#pizza-model" gesture-handler></a-entity>
+  <!--Ingredients-->
+  <a-plane position="0 0 0" width="1.5" height="1.5" rotation="-90 0 0">
+  <a-plane position="0 0.89 0.02" width="1.49" height="0.3" rotation="0 0 0" color="#f0c30f">
+    <a-entity position="0 0 0.1" rotation="0 0 0" 
+    text="font:monoid;value:PIZZA MARGHERITA;color:black;width: 1.8;height:1;align:center;">
+    </a-entity>
+  </a-plane>
+  <a-entity position="0 0 0.1" rotation="0 0 0"
+  text="color: black; align: center; width: 2; font: monoid; value: Tomato sauce\n\nMozzarella cheese\n\nParmesan cheese (optional)\n\nFresh Basil\n\nOlive oil\n\nBlack pepper (optional)"
+  ></a-entity>
+  </a-plane>
+  </a-marker>
+    <!-- Camera -->
+    <a-entity camera></a-entity>
+  <a-entity>
+
+  </a-entity>    
+  </a-scene>
+
+  <!-- Button Main Div -->
+  <div id="button-div"></div>
+  <div class="container">
+    <div id="modal-div" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Order Summary</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <table class="table table-condensed">
+                <thead>
+                  <tr>
+                    <td><strong>Item</strong></td>
+                    <td class="text-center"><strong>Price</strong></td>
+                    <td class="text-center"><strong>Quantity</strong></td>
+                    <td class="text-right"><strong>Total</strong></td>
+                  </tr>
+                </thead>
+                <tbody id="bill-table-body">
+                  <!-- foreach ($order->lineItems as $line)  -->
+
+                  <!-- Your Order Summary UI will comes here                 
+                    
+                  -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="pay-button" type="button" class="btn btn-primary">
+              Pay Now
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Boilerplate for Ratings Modal -->
+  <div class="container">
+    <div id="rating-modal-div" class="rating-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Rate Dish</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeRatingModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="table-responsive">
+              <!--Text Field Input-->
+              <textarea class="form-control" id="feedback-input" rows="3"></textarea>
+
+              <!--Stars Input-->
+              <input id="rating-input" name="rating-input" class="rating rating-loading" data-min="0" data-max="5"
+                data-step="0.1" value="0" />
+
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!--Submit Button-->
+            <button id="save-rating-button" type="button" class="btn btn-primary">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script> 
+  
+  function closeModal() {
+     document.getElementById("modal-div").style.display = "none";
+  } 
+  </script>
+</body>
+
+</html>
